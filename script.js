@@ -7,7 +7,7 @@
 // If testing locally, uncomment the localhost URL and comment out the production URL
 // const API_BASE_URL = 'http://localhost:3000';
 // Once your backend is deployed, update this URL to your live backend URL (e.g., your Render or Heroku URL)
-const API_BASE_URL = 'https://clarix-backend.onrender.com';
+const API_BASE_URL = 'https://clarix-bzm1.vercel.app';
 
 const S = {
   user: null, lRole: 'student', sRole: 'student', mastery: {}, sessions: 0, history: [], streak: 0,
