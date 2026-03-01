@@ -3,6 +3,12 @@
 ═══════════════════════════════ */
 // SUBJECTS, LEVELS, KG, and QB are now loaded from data.js
 
+// ⚠️ DEPLOYMENT CONFIGURATION ⚠️
+// If testing locally, uncomment the localhost URL and comment out the production URL
+// const API_BASE_URL = 'http://localhost:3000';
+// Once your backend is deployed, update this URL to your live backend URL (e.g., your Render or Heroku URL)
+const API_BASE_URL = 'https://clarix-backend.onrender.com';
+
 const S = {
   user: null, lRole: 'student', sRole: 'student', mastery: {}, sessions: 0, history: [], streak: 0,
   activeSubject: 'maths', activeLevel: '12',
@@ -24,7 +30,7 @@ async function handleLogin() {
 
   showLoad('AUTHENTICATING…');
   try {
-    const res = await fetch('/api/auth/login', {
+    const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: em, password: pw })
@@ -60,7 +66,7 @@ async function handleSignup() {
 
   showLoad('CREATING PROFILE…');
   try {
-    const res = await fetch('/api/auth/register', {
+    const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -201,7 +207,7 @@ async function goQuiz() {
     const topics = aKg.slice(0, 10).map(c => ({ id: c.id, name: c.name }));
 
     // Call our new backend
-    const res = await fetch('/api/generate-questions', {
+    const res = await fetch(`${API_BASE_URL}/api/generate-questions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -272,7 +278,7 @@ async function finishQuiz() {
   S.streak = Math.min(S.streak + 1, 30);
 
   try {
-    await fetch('/api/users/sync', {
+    await fetch(`${API_BASE_URL}/api/users/sync`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
