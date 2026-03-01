@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>CLARIX — Adaptive Learning Intelligence</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;800;900&family=Figtree:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="ls hidden" id="ls">
+    <div class="sr"></div>
+    <div class="ll" id="ll">PROCESSING</div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <!-- ═══════════════ LOGIN ═══════════════ -->
+  <div class="screen active" id="s-login">
+    <div class="auth-wrap">
+      <div class="auth-left blue-panel">
+        <div class="alc">
+          <div class="brand-mark f1">
+            <div class="bm-dot"></div>
+            <div class="bm-name">CLARIX</div>
+          </div>
+          <div class="auth-h1 f2">Bridge the<br /><em>invisible gaps</em><br />in learning.</div>
+          <p class="auth-p f3">CLARIX maps concept-level mastery in real time and builds a personalized path — before
+            academic failure becomes inevitable.</p>
+          <div class="feat-list f4">
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-text"><strong>Real-time gap detection</strong>Not after exams, before them.</div>
+            </div>
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-text"><strong>Adaptive learning paths</strong>Prerequisites enforced automatically.</div>
+            </div>
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-text"><strong>Teacher analytics</strong>Class-level intelligence at a glance.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="auth-right">
+        <div class="aform fa">
+          <div class="af-h">Welcome back</div>
+          <div class="af-sub">New to CLARIX? <a onclick="switchScreen('s-signup')">Create account →</a></div>
+          <div class="fg"><label>Email Address</label><input class="fi" id="l-email" type="email"
+              placeholder="you@university.edu" value="student@clarix.ai" /></div>
+          <div class="fg"><label>Password</label><input class="fi" id="l-pass" type="password" placeholder="••••••••"
+              value="password" /></div>
+          <div class="fg" style="margin-bottom:18px;"><label>Sign in as</label>
+            <div class="role-row">
+              <div class="rc on" id="lr-student" onclick="setRole('login','student')"><span class="rc-ico">🎓</span>
+                <div class="rc-name">Student</div>
+                <div class="rc-desc">Learn & track mastery</div>
+              </div>
+              <div class="rc" id="lr-teacher" onclick="setRole('login','teacher')"><span class="rc-ico">👩‍🏫</span>
+                <div class="rc-name">Teacher</div>
+                <div class="rc-desc">Monitor & intervene</div>
+              </div>
+            </div>
+          </div>
+          <button class="btn-auth" onclick="handleLogin()">Sign In to CLARIX →</button>
+          <div class="divider"><span>or try a demo</span></div>
+          <div class="demo-row">
+            <div class="demo-btn" onclick="demo('student')">🎓 Student Demo</div>
+            <div class="demo-btn" onclick="demo('teacher')">👩‍🏫 Teacher Demo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SIGNUP ═══════════════ -->
+  <div class="screen" id="s-signup">
+    <div class="auth-wrap">
+      <div class="auth-left green-panel">
+        <div class="alc">
+          <div class="brand-mark">
+            <div class="bm-dot"></div>
+            <div class="bm-name">CLARIX</div>
+          </div>
+          <div class="auth-h1">Start your<br /><em>mastery</em><br />journey today.</div>
+          <p class="auth-p">Join students who use CLARIX to close knowledge gaps before they become academic crises.</p>
+          <div class="feat-list" style="margin-top:24px;">
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-text"><strong>Instant diagnostics</strong>Your profile in minutes.</div>
+            </div>
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-text"><strong>Concept-level scores</strong>Not just marks — precision insight.</div>
+            </div>
+            <div class="feat">
+              <div class="feat-dot"></div>
+              <div class="feat-text"><strong>Early intervention</strong>Before exams catch you off guard.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="auth-right">
+        <div class="aform fa">
+          <div class="af-h">Create account</div>
+          <div class="af-sub">Already have one? <a onclick="switchScreen('s-login')">Sign in →</a></div>
+          <div class="fg" style="margin-bottom:12px;"><label>I am a</label>
+            <div class="role-row">
+              <div class="rc on" id="sr-student" onclick="setRole('signup','student')"><span class="rc-ico">🎓</span>
+                <div class="rc-name">Student</div>
+                <div class="rc-desc">Learn & track mastery</div>
+              </div>
+              <div class="rc" id="sr-teacher" onclick="setRole('signup','teacher')"><span class="rc-ico">👩‍🏫</span>
+                <div class="rc-name">Teacher</div>
+                <div class="rc-desc">Monitor & intervene</div>
+              </div>
+            </div>
+          </div>
+          <div class="frow">
+            <div class="fg"><label>First Name</label><input class="fi" id="s-fn" placeholder="Aryan" /></div>
+            <div class="fg"><label>Last Name</label><input class="fi" id="s-ln" placeholder="Kumar" /></div>
+          </div>
+          <div class="fg"><label>Email</label><input class="fi" id="s-em" type="email"
+              placeholder="aryan@university.edu" /></div>
+          <div class="fg"><label>Password</label><input class="fi" id="s-pw" type="password"
+              placeholder="Create a secure password" /></div>
+          <div class="frow" id="s-extras">
+            <div class="fg"><label>Level</label><select class="fi" id="s-lv">
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+              </select></div>
+            <div class="fg"><label>Goal</label><select class="fi" id="s-gl">
+                <option>Concept Mastery</option>
+                <option>Exam Prep</option>
+              </select></div>
+          </div>
+          <button class="btn-auth green" onclick="handleSignup()">Create My Profile →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ APP ═══════════════ -->
+  <div id="s-app" class="screen">
+    <aside class="sidebar">
+      <div class="sb-brand">
+        <div class="sb-dot"></div>
+        <div>
+          <div class="sb-logo">CLARIX</div>
+          <div class="sb-tagline">Adaptive Learning AI</div>
+        </div>
+      </div>
+      <nav class="sb-nav" id="sb-nav">
+        <!-- Injected via script.js -->
+      </nav>
+      <div class="sb-footer">
+        <div class="sb-user">
+          <div class="sb-av" id="sb-av">AK</div>
+          <div style="flex:1">
+            <div class="sb-name-text" id="sb-un">—</div>
+            <div class="sb-role-text" id="sb-ur"
+              style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px;">Student</div>
+            <div class="sb-role-text" id="sb-ur">Student</div>
+          </div>
+        </div>
+        <div class="sb-out" onclick="logout()">⎋ Sign Out</div>
+      </div>
+    </aside>
+    <div class="main">
+
+      <!-- DASHBOARD -->
+      <div class="page" id="p-home">
+        <div class="topbar f1">
+          <div>
+            <div class="pg-t" id="dash-t">Dashboard</div>
+            <div class="pg-s">Personalized learning intelligence</div>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <select id="level-select" class="fi" style="width:160px; height: 38px; padding: 0 12px; cursor: pointer;"
+              onchange="changeLevel(this.value)">
+              <option value="11">11th Grade</option>
+              <option value="12">12th Grade</option>
+              <option value="ug">Undergraduate</option>
+            </select>
+            <button class="btn-green" onclick="goQuiz()">▶ Take Diagnostic Quiz</button>
+          </div>
+        </div>
+        <div class="kgrid f2">
+          <div class="kpi">
+            <div class="kpi-bar" style="--kc:var(--green)"></div>
+            <div class="kl">Concepts Mastered</div>
+            <div class="kv" id="kv-m">—</div>
+            <div class="kd nn" id="kd-m">Complete a quiz to begin</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-bar" style="--kc:var(--coral)"></div>
+            <div class="kl">Active Gaps</div>
+            <div class="kv" id="kv-g">—</div>
+            <div class="kd dn" id="kd-g">Below mastery threshold</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-bar" style="--kc:var(--blue)"></div>
+            <div class="kl">Avg. Mastery</div>
+            <div class="kv" id="kv-a">—%</div>
+            <div class="kd wn" id="kd-a">Across all concepts</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-bar" style="--kc:var(--violet)"></div>
+            <div class="kl">Study Streak</div>
+            <div class="kv" id="kv-s">0d</div>
+            <div class="kd up">🔥 Keep going!</div>
+          </div>
+        </div>
+        <div class="g3 f3">
+          <div class="card">
+            <div class="ch">
+              <div>
+                <div class="ct">Concept Knowledge Map</div>
+                <div class="cs" id="dash-hm-sub">Live mastery heatmap</div>
+              </div><span class="badge b-blue" id="hm-badge">Awaiting Quiz</span>
+            </div>
+            <div class="hmg" id="heatmap"></div>
+            <div style="display:flex;gap:16px;margin-top:14px;">
+              <div
+                style="display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;font-weight:600;color:var(--green)">
+                <div style="width:7px;height:7px;border-radius:50%;background:var(--green)"></div>Strong >80%
+              </div>
+              <div
+                style="display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;font-weight:600;color:var(--amber)">
+                <div style="width:7px;height:7px;border-radius:50%;background:var(--amber)"></div>Moderate 60–80%
+              </div>
+              <div
+                style="display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;font-weight:600;color:var(--coral)">
+                <div style="width:7px;height:7px;border-radius:50%;background:var(--coral)"></div>Weak &lt;60%
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch">
+              <div>
+                <div class="ct">Gap Alerts</div>
+                <div class="cs">Detected knowledge gaps</div>
+              </div><span class="badge b-coral" id="gap-cnt">0 Active</span>
+            </div>
+            <div id="gap-list">
+              <div style="text-align:center;padding:28px 0;font-family:var(--mono);font-size:11px;color:var(--ink4);">
+                Take quiz to detect gaps</div>
+            </div>
+          </div>
+        </div>
+        <div class="g2 f4">
+          <div class="card">
+            <div class="ch">
+              <div>
+                <div class="ct">Mastery Distribution</div>
+                <div class="cs">Score spread across concepts</div>
+              </div><span class="badge b-violet">Overview</span>
+            </div>
+            <div class="dwrap" style="height:220px;">
+              <div style="position:relative;width:200px;height:200px;"><canvas id="donutC" width="200" height="200"
+                  style="display:block;"></canvas>
+                <div class="dcenter">
+                  <div class="dcn" id="dc-n"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch">
+              <div>
+                <div class="ct">Concept Bar Chart</div>
+                <div class="cs">Per-concept mastery scores</div>
+              </div><span class="badge b-blue">Calculus</span>
+            </div>
+            <div style="height:190px;"><canvas id="barC"></canvas></div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="ch">
+              <div>
+                <div class="ct">Concept Progress Tracker</div>
+                <div class="cs">Mastery % per knowledge node</div>
+              </div>
+            </div>
+            <div id="concept-bars">
+              <div style="text-align:center;padding:16px;font-family:var(--mono);font-size:11px;color:var(--ink4);">No
+                data yet</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch">
+              <div>
+                <div class="ct">Session Score Trend</div>
+                <div class="cs">Avg mastery over time</div>
+              </div><span class="badge b-green" id="ses-badge">0 Sessions</span>
+            </div>
+            <div style="height:160px;"><canvas id="trendC"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <div class="page" id="p-profile">
+        <div class="topbar f1">
+          <div>
+            <div class="pg-t">My Profile</div>
+            <div class="pg-s">Academic identity & achievement record</div>
+          </div>
+        </div>
+        <div class="g3r">
+          <div>
+            <div class="pcard mb">
+              <div class="pcard-top-strip"></div>
+              <div class="pctop">
+                <div class="pcav" id="pc-av">AK</div>
+                <div>
+                  <div class="pcn" id="pc-n">—</div>
+                  <div class="pcr" id="pc-r">Student · Calculus</div>
+                  <div class="pce" id="pc-e">—</div>
+                </div>
+              </div>
+              <div class="pcstats">
+                <div class="pcs">
+                  <div class="pcsv" id="pc-m">—</div>
+                  <div class="pcsl">Mastered</div>
+                </div>
+                <div class="pcs">
+                  <div class="pcsv" id="pc-s">0</div>
+                  <div class="pcsl">Sessions</div>
+                </div>
+                <div class="pcs">
+                  <div class="pcsv" id="pc-st">0d</div>
+                  <div class="pcsl">Streak</div>
+                </div>
+              </div>
+              <div
+                style="font-family:var(--mono);font-size:9px;font-weight:600;color:var(--ink4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:9px;">
+                Achievements</div>
+              <div class="ach-row" id="ach-row">
+                <div class="ach">🔒 First Quiz</div>
+                <div class="ach">🔒 Conqueror</div>
+                <div class="ach">🔒 7-Day Streak</div>
+                <div class="ach">🔒 Gap Closer</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="ch">
+                <div>
+                  <div class="ct">Weekly Streak</div>
+                  <div class="cs">Last 4 weeks · Daily activity</div>
+                </div>
+              </div>
+              <div
+                style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-family:var(--mono);font-size:9px;font-weight:600;color:var(--ink4);text-align:center;margin-bottom:7px;">
+                <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:4px;" id="streak-wrap"></div>
+            </div>
+          </div>
+          <div>
+            <div class="card mb">
+              <div class="ch">
+                <div>
+                  <div class="ct">Learning Goal & Progress</div>
+                </div><span class="badge b-green" id="goal-badge">Concept Mastery</span>
+              </div>
+              <div style="margin-bottom:13px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span
+                    style="font-size:12px;font-weight:700;color:var(--ink2);">Course Completion</span><span
+                    style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink4);"
+                    id="comp-pct">0%</span></div>
+                <div class="pt">
+                  <div class="pf" id="comp-bar" style="width:0%;background:var(--green)"></div>
+                </div>
+              </div>
+              <div class="pi">
+                <div class="pm"><span class="pn">Mastery Rate</span><span class="pv" id="mr-v">0%</span></div>
+                <div class="pt">
+                  <div class="pf" id="mr-b" style="width:0%;background:var(--blue)"></div>
+                </div>
+              </div>
+              <div class="pi">
+                <div class="pm"><span class="pn">Engagement Score</span><span class="pv" id="eng-v">Low</span></div>
+                <div class="pt">
+                  <div class="pf" id="eng-b" style="width:20%;background:var(--amber)"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card mb">
+              <div class="ch">
+                <div>
+                  <div class="ct">Concept Breakdown</div>
+                </div>
+              </div>
+              <div id="pc-bars">
+                <div style="text-align:center;padding:16px;font-family:var(--mono);font-size:11px;color:var(--ink4);">
+                  Take quiz to see breakdown</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="ch">
+                <div>
+                  <div class="ct">Quick Actions</div>
+                </div>
+              </div>
+              <button class="btn-green" style="width:100%;margin-bottom:9px;" onclick="goQuiz()">▶ Start Quiz</button>
+              <button class="btn-ghost" style="width:100%;margin-bottom:9px;" onclick="showPage('p-path')">🛤 View My
+                Path</button>
+              <button class="btn-ghost" style="width:100%;" onclick="showPage('p-home')">← Dashboard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUIZ -->
+      <div class="page" id="p-quiz">
+        <div class="qwrap">
+          <div class="topbar f1">
+            <div>
+              <div class="pg-t">Diagnostic Assessment</div>
+              <div class="pg-s">Concept-tagged · <span id="quiz-sub-name">Calculus</span> Knowledge Graph</div>
+            </div><button class="btn-ghost" onclick="exitQuiz()">✕ Exit</button>
+          </div>
+          <div class="qpbt">
+            <div class="qpbf" id="qpbf"></div>
+          </div>
+          <div class="qmr">
+            <div class="qnum" id="q-num">Q 1 of 12</div>
+            <div class="qctag" id="q-ctag">Limits</div>
+            <div class="qtimer" id="q-timer">0:00</div>
+          </div>
+          <div class="qbox f2">
+            <div class="qdiff" id="q-diff">BASIC · BLOOM: RECALL</div>
+            <div class="qtext" id="q-text">Loading...</div>
+            <div class="qopts" id="q-opts"></div>
+            <div class="hintbox hidden" id="q-hint"></div>
+            <div class="fbbox hidden" id="q-fb"></div>
+            <div class="confrow" id="conf-row" style="display:none;">
+              <span class="conflabel">Confidence:</span>
+              <button class="confopt" onclick="setConf('low',this)">Low</button>
+              <button class="confopt" onclick="setConf('medium',this)">Medium</button>
+              <button class="confopt on" onclick="setConf('high',this)">High</button>
+            </div>
+          </div>
+          <div class="qacts">
+            <button class="btn-ghost" onclick="useHint()" id="hint-btn">💡 Hint</button>
+            <div style="display:flex;gap:9px;">
+              <button class="btn-blue" onclick="submitAns()" id="submit-btn" disabled>Submit</button>
+              <button class="btn-blue hidden" onclick="nextQ()" id="next-btn">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="page" id="p-results">
+        <div class="qwrap">
+          <div class="topbar f1">
+            <div>
+              <div class="pg-t">Quiz Results</div>
+              <div class="pg-s">Mastery profile updated · Knowledge gaps mapped</div>
+            </div>
+          </div>
+          <div class="card f2">
+            <div class="rshero">
+              <div class="rsring">
+                <div class="rsnum" id="res-pct">—%</div>
+                <div class="rslbl">Mastery</div>
+              </div>
+            </div>
+            <div class="rsrow">
+              <div class="rss">
+                <div class="rssv" id="res-cor">—</div>
+                <div class="rssl">Correct</div>
+              </div>
+              <div class="rss">
+                <div class="rssv" id="res-time">—</div>
+                <div class="rssl">Avg Time</div>
+              </div>
+              <div class="rss">
+                <div class="rssv" id="res-gaps">—</div>
+                <div class="rssl">Gaps Found</div>
+              </div>
+            </div>
+            <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:12px;">Concept Breakdown</div>
+            <div id="res-bd"></div>
+            <div style="display:flex;gap:10px;margin-top:16px;">
+              <button class="btn-green" style="flex:1;" onclick="showPage('p-home')">→ View Dashboard</button>
+              <button class="btn-ghost" onclick="showPage('p-path')">🛤 My Path</button>
+              <button class="btn-ghost" onclick="goQuiz()">↺ Retake</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PATH -->
+      <div class="page" id="p-path">
+        <div class="topbar f1">
+          <div>
+            <div class="pg-t">Adaptive Learning Path</div>
+            <div class="pg-s">AI-generated · Prerequisite-enforced · Personalized</div>
+          </div><span class="badge b-blue">AI Generated</span>
+        </div>
+        <div class="g3">
+          <div class="card">
+            <div class="ch">
+              <div>
+                <div class="ct">Your Personalized Path</div>
+                <div class="cs">Rerouted based on your knowledge state</div>
+              </div>
+            </div>
+            <div class="ptl" id="path-tl">
+              <div style="text-align:center;padding:36px 0;font-family:var(--mono);font-size:11px;color:var(--ink4);">
+                Complete diagnostic quiz to generate your path</div>
+            </div>
+          </div>
+          <div>
+            <div class="card mb">
+              <div class="ch">
+                <div>
+                  <div class="ct">Recommendations</div>
+                  <div class="cs">Targeted resources for gaps</div>
+                </div><span class="badge b-amber">Personalized</span>
+              </div>
+              <div id="recs-list">
+                <div style="text-align:center;padding:22px 0;font-family:var(--mono);font-size:11px;color:var(--ink4);">
+                  No recommendations yet</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="ch">
+                <div>
+                  <div class="ct">Path Statistics</div>
+                </div>
+              </div>
+              <div class="pi">
+                <div class="pm"><span class="pn">Path Completion</span><span class="pv" id="path-cp">0%</span></div>
+                <div class="pt">
+                  <div class="pf" id="path-cpb" style="width:0%;background:var(--green)"></div>
+                </div>
+              </div>
+              <div class="pi">
+                <div class="pm"><span class="pn">Concepts Cleared</span><span class="pv" id="path-cl">0 / 6</span></div>
+                <div class="pt">
+                  <div class="pf" id="path-clb" style="width:0%;background:var(--blue)"></div>
+                </div>
+              </div>
+              <button class="btn-green" style="width:100%;margin-top:13px;" onclick="goQuiz()">▶ Continue
+                Learning</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEACHER -->
+      <div class="page" id="p-teacher">
+        <div class="topbar f1">
+          <div>
+            <div class="pg-t">Teacher Analytics</div>
+            <div class="pg-s">Class-level mastery intelligence · Calculus · 74 Students</div>
+          </div><span class="badge b-coral">11 At-Risk</span>
+        </div>
+        <div class="kgrid f2">
+          <div class="kpi">
+            <div class="kpi-bar" style="--kc:var(--green)"></div>
+            <div class="kl">Total Students</div>
+            <div class="kv">74</div>
+            <div class="kd up">↑ 68 active this week</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-bar" style="--kc:var(--coral)"></div>
+            <div class="kl">At-Risk Students</div>
+            <div class="kv">11</div>
+            <div class="kd dn">↑ 3 new this week</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-bar" style="--kc:var(--amber)"></div>
+            <div class="kl">Class Avg. Mastery</div>
+            <div class="kv">58%</div>
+            <div class="kd wn">→ Below 70% target</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-bar" style="--kc:var(--violet)"></div>
+            <div class="kl">Gaps Detected</div>
+            <div class="kv">47</div>
+            <div class="kd dn">↑ 9 this week</div>
+          </div>
+        </div>
+        <div class="card mb f3">
+          <div class="ch">
+            <div>
+              <div class="ct">Concept Weakness Across Class</div>
+              <div class="cs">% of students below 70% threshold per concept</div>
+            </div>
+          </div>
+          <div class="tcrow">
+            <div class="tcc">
+              <div class="tccn">Limits</div>
+              <div class="tccp tg">22%</div>
+              <div class="tccl">Below threshold</div>
+            </div>
+            <div class="tcc">
+              <div class="tccn">Continuity</div>
+              <div class="tccp ta">34%</div>
+              <div class="tccl">Below threshold</div>
+            </div>
+            <div class="tcc">
+              <div class="tccn">Derivatives</div>
+              <div class="tccp ta">39%</div>
+              <div class="tccl">Below threshold</div>
+            </div>
+            <div class="tcc">
+              <div class="tccn">App. Deriv.</div>
+              <div class="tccp tr">51%</div>
+              <div class="tccl">Below threshold</div>
+            </div>
+            <div class="tcc">
+              <div class="tccn">Integrals</div>
+              <div class="tccp tr">67%</div>
+              <div class="tccl">Below threshold</div>
+            </div>
+          </div>
+        </div>
+        <div class="g2 f4">
+          <div class="card">
+            <div class="ch">
+              <div>
+                <div class="ct">Class Score Distribution</div>
+                <div class="cs">Student count per mastery band</div>
+              </div><span class="badge b-blue">74 Students</span>
+            </div>
+            <div style="height:210px;"><canvas id="t-dist"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="ch">
+              <div>
+                <div class="ct">Weakest Concepts</div>
+                <div class="cs">% of class below mastery threshold</div>
+              </div>
+            </div>
+            <div class="pi">
+              <div class="pm"><span class="pn">Integrals</span><span class="pv"
+                  style="color:var(--coral);font-weight:700">67%</span></div>
+              <div class="pt">
+                <div class="pf" style="width:67%;background:var(--coral)"></div>
+              </div>
+            </div>
+            <div class="pi">
+              <div class="pm"><span class="pn">App. of Derivatives</span><span class="pv"
+                  style="color:var(--coral);font-weight:700">51%</span></div>
+              <div class="pt">
+                <div class="pf" style="width:51%;background:var(--coral)"></div>
+              </div>
+            </div>
+            <div class="pi">
+              <div class="pm"><span class="pn">Derivatives</span><span class="pv"
+                  style="color:var(--amber);font-weight:700">39%</span></div>
+              <div class="pt">
+                <div class="pf" style="width:39%;background:var(--amber)"></div>
+              </div>
+            </div>
+            <div class="pi">
+              <div class="pm"><span class="pn">Continuity</span><span class="pv"
+                  style="color:var(--amber);font-weight:700">34%</span></div>
+              <div class="pt">
+                <div class="pf" style="width:34%;background:var(--amber)"></div>
+              </div>
+            </div>
+            <div class="pi">
+              <div class="pm"><span class="pn">Limits</span><span class="pv"
+                  style="color:var(--blue);font-weight:700">22%</span></div>
+              <div class="pt">
+                <div class="pf" style="width:22%;background:var(--blue)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch">
+            <div>
+              <div class="ct">At-Risk Student Alerts</div>
+              <div class="cs">Mastery below 50% in 2+ concepts</div>
+            </div><span class="badge b-coral">11 Students</span>
+          </div>
+          <table class="rtable">
+            <thead>
+              <tr>
+                <th class="rth">Student ID</th>
+                <th class="rth">Weakest Concept</th>
+                <th class="rth">Mastery</th>
+                <th class="rth">Gaps</th>
+                <th class="rth">Last Active</th>
+                <th class="rth">Risk</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="rtd">Student #14</td>
+                <td class="rtd">Integrals</td>
+                <td class="rtd" style="font-family:var(--mono);color:var(--coral);font-weight:700">31%</td>
+                <td class="rtd" style="font-family:var(--mono);font-weight:600">5</td>
+                <td class="rtd" style="font-family:var(--mono);font-size:10px;color:var(--ink4)">4 days ago</td>
+                <td class="rtd"><span class="rp rph">Critical</span></td>
+              </tr>
+              <tr>
+                <td class="rtd">Student #27</td>
+                <td class="rtd">Derivatives</td>
+                <td class="rtd" style="font-family:var(--mono);color:var(--coral);font-weight:700">36%</td>
+                <td class="rtd" style="font-family:var(--mono);font-weight:600">4</td>
+                <td class="rtd" style="font-family:var(--mono);font-size:10px;color:var(--ink4)">2 days ago</td>
+                <td class="rtd"><span class="rp rph">Critical</span></td>
+              </tr>
+              <tr>
+                <td class="rtd">Student #41</td>
+                <td class="rtd">Limits</td>
+                <td class="rtd" style="font-family:var(--mono);color:var(--amber);font-weight:700">44%</td>
+                <td class="rtd" style="font-family:var(--mono);font-weight:600">3</td>
+                <td class="rtd" style="font-family:var(--mono);font-size:10px;color:var(--ink4)">Today</td>
+                <td class="rtd"><span class="rp rpm">Medium</span></td>
+              </tr>
+              <tr>
+                <td class="rtd">Student #08</td>
+                <td class="rtd">Continuity</td>
+                <td class="rtd" style="font-family:var(--mono);color:var(--amber);font-weight:700">48%</td>
+                <td class="rtd" style="font-family:var(--mono);font-weight:600">3</td>
+                <td class="rtd" style="font-family:var(--mono);font-size:10px;color:var(--ink4)">Yesterday</td>
+                <td class="rtd"><span class="rp rpm">Medium</span></td>
+              </tr>
+              <tr>
+                <td class="rtd">Student #62</td>
+                <td class="rtd">Integrals</td>
+                <td class="rtd" style="font-family:var(--mono);color:var(--green);font-weight:700">55%</td>
+                <td class="rtd" style="font-family:var(--mono);font-weight:600">2</td>
+                <td class="rtd" style="font-family:var(--mono);font-size:10px;color:var(--ink4)">Today</td>
+                <td class="rtd"><span class="rp rpl">Stable</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STUDY MATERIAL MODAL -->
+  <div id="study-modal" class="modal-overlay hidden" onclick="closeStudyModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h2 id="sm-title" style="font-family:var(--serif); font-size: 22px; color:var(--ink);">Concept Title</h2>
+        <button class="btn-ghost" onclick="closeStudyModal()" style="font-size: 18px; padding: 4px 8px;">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="sm-video-container">
+          <iframe id="sm-video" width="100%" height="315" src="" title="Study Video" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+        <div class="sm-notes-container"
+          style="margin-top: 20px; padding: 16px; background: var(--bg2); border-radius: var(--r2); border: 1px solid var(--border);">
+          <h3
+            style="font-family: var(--mono); font-size: 11px; text-transform: uppercase; color: var(--ink4); letter-spacing: 0.5px; margin-bottom: 8px;">
+            Key Notes</h3>
+          <p id="sm-notes" style="font-size: 14px; line-height: 1.6; color: var(--ink);"></p>
+        </div>
+      </div>
+      <div class="modal-footer" style="margin-top: 24px; text-align: right;">
+        <button class="btn-green" onclick="closeStudyModal(); goQuizFromModal()" id="sm-quiz-btn">Take Practice
+          Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
