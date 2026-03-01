@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { GoogleGenAI, Type } from '@google/genai';
 import connectDB from './db.js';
 import User from './models/User.js';
 
@@ -21,55 +20,10 @@ app.use(express.json());
 // Serve the static frontend files from the parent directory
 app.use(express.static(path.join(__dirname, '../')));
 
-// Initialize the Gemini SDK
-// It automatically picks up the GEMINI_API_KEY from the environment
-const ai = new GoogleGenAI({});
-
-// Define the exact JSON schema we want the model to return
-// This must perfectly match the Question Bank (QB) structure the frontend expects.
-const responseSchema = {
-    type: Type.ARRAY,
-    description: "A list of multiple choice questions",
-    items: {
-        type: Type.OBJECT,
-        properties: {
-            concept: {
-                type: Type.STRING,
-                description: "The exact concept ID passed in the prompt."
-            },
-            diff: {
-                type: Type.STRING,
-                description: "The difficulty level, one of: 'basic', 'int', 'adv', or 'application'."
-            },
-            bloom: {
-                type: Type.STRING,
-                description: "The bloom's taxonomy classification, e.g., 'Recall', 'Understanding', 'Application', 'Analyze'."
-            },
-            text: {
-                type: Type.STRING,
-                description: "The actual text of the question."
-            },
-            opts: {
-                type: Type.ARRAY,
-                description: "Array of exactly 4 possible string answers.",
-                items: { type: Type.STRING }
-            },
-            correct: {
-                type: Type.INTEGER,
-                description: "The integer 0-indexed position of the correct answer in the opts array (0, 1, 2, or 3)."
-            },
-            hint: {
-                type: Type.STRING,
-                description: "A short, helpful hint for the student if they get stuck."
-            },
-            exp: {
-                type: Type.STRING,
-                description: "A detailed explanation of why the correct answer is right and why the others are wrong."
-            }
-        },
-        required: ["concept", "diff", "bloom", "text", "opts", "correct", "hint", "exp"]
-    }
-};
+// Groq API configuration
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
+const GROQ_MODEL = 'openai/gpt-oss-120b';
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 app.post('/api/generate-questions', async (req, res) => {
     try {
@@ -79,39 +33,67 @@ app.post('/api/generate-questions', async (req, res) => {
             return res.status(400).json({ error: 'Missing required fields: subject, level, or topics array' });
         }
 
-        console.log(`Generating ${count} ${subject} questions for level ${level}...`);
+        console.log(`Generating ${count} ${subject} questions for level ${level} via Groq...`);
 
-        // Construct the prompt giving the model context about what to generate
-        const prompt = `
-            You are an expert ${subject} educator creating a diagnostic quiz for ${level} students.
-            Generate exactly ${count} multiple choice questions.
-            The questions should be distributed across the following specific topics:
-            ${JSON.stringify(topics, null, 2)}
-            
-            Ensure the questions vary in difficulty (basic, intermediate, advanced) and test different levels of Bloom's Taxonomy.
-            Ensure the mathematical/scientific notation is clear and correct.
-            Return the output adhering strictly to the provided JSON schema.
-        `;
+        const prompt = `You are an expert ${subject} educator creating a diagnostic quiz for ${level} students.
+Generate exactly ${count} multiple choice questions.
+The questions should be distributed across the following specific topics:
+${JSON.stringify(topics, null, 2)}
 
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-                responseSchema: responseSchema,
-                // Slightly lower temperature for more deterministic/factual quizzes
+Ensure the questions vary in difficulty (basic, intermediate, advanced) and test different levels of Bloom's Taxonomy.
+Ensure the mathematical/scientific notation is clear and correct.
+
+Return ONLY a valid JSON array (no markdown, no code fences) where each object has these exact keys:
+- "concept" (string): The exact concept ID from the topics above
+- "diff" (string): One of "basic", "int", "adv", or "application"
+- "bloom" (string): e.g. "Recall", "Understanding", "Application", "Analyze"
+- "text" (string): The question text
+- "opts" (array of 4 strings): The four answer options
+- "correct" (integer 0-3): 0-indexed position of the correct answer
+- "hint" (string): A short hint for the student
+- "exp" (string): A detailed explanation of the correct answer`;
+
+        const response = await fetch(GROQ_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${GROQ_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: GROQ_MODEL,
+                messages: [
+                    { role: 'system', content: 'You are a helpful quiz generator. Always respond with valid JSON only, no markdown formatting.' },
+                    { role: 'user', content: prompt }
+                ],
                 temperature: 0.4,
-            }
+                response_format: { type: 'json_object' }
+            })
         });
 
-        // The response text should be a valid JSON array matching the schema
-        const questionsJson = response.text;
-
-        if (!questionsJson) {
-            throw new Error("Model returned empty or invalid response");
+        if (!response.ok) {
+            const errBody = await response.text();
+            console.error('Groq API error:', response.status, errBody);
+            throw new Error(`Groq API returned ${response.status}: ${errBody}`);
         }
 
-        const questions = JSON.parse(questionsJson);
+        const data = await response.json();
+        const raw = data.choices?.[0]?.message?.content;
+
+        if (!raw) {
+            throw new Error("Model returned empty response");
+        }
+
+        // Parse the JSON — handle both array and {questions: [...]} wrapper
+        let questions;
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+            questions = parsed;
+        } else if (parsed.questions && Array.isArray(parsed.questions)) {
+            questions = parsed.questions;
+        } else {
+            throw new Error("Unexpected response format from model");
+        }
+
         res.json({ questions });
 
     } catch (error) {
