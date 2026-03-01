@@ -278,7 +278,7 @@ Based on mastery state, the system:
 |----------|------|
 | 🐙 **GitHub Repository** | [github.com/kanikasharma-18/Clarix](https://github.com/kanikasharma-18/Clarix) |
 | 🌐 **Live Demo** | [github.com/kanikasharma-18/Clarix](https://clarix.onrender.com) |
-| 🎥 **Demo Video** | *(Add link)* |
+| 🎥 **Demo Video** | [github.com/kanikasharma-18/Clarix](https://drive.google.com/drive/folders/1Aswa68cQiowD_NLRLgaOj3uCWYPl3tcr?usp=sharing) |
 
 ---
 
