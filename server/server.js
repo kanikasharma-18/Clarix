@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import connectDB from './db.js';
 import User from './models/User.js';
@@ -9,9 +11,15 @@ import User from './models/User.js';
 dotenv.config();
 connectDB();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Serve the static frontend files from the parent directory
+app.use(express.static(path.join(__dirname, '../')));
 
 // Initialize the Gemini SDK
 // It automatically picks up the GEMINI_API_KEY from the environment

@@ -26,8 +26,8 @@ const KG = [
 
     // 12th Grade Maths (10 topics)
     { id: 'm12_rel', name: 'Functions & Relations', subject: 'maths', level: '12', prereqs: [], threshold: 70, videoUrl: 'https://www.youtube.com/embed/A8gMSLhF83w', notes: 'Types of relations (equivalence) and functions (one-one, onto).' },
-    { id: 'm12_itf', name: 'Inverse Trigonometry', subject: 'maths', level: '12', prereqs: ['m12_rel'], threshold: 75, videoUrl: 'https://www.youtube.com/embed/N-0_hTzZXZ0', notes: 'Principal value branches and properties of inverse trig functions.' },
-    { id: 'm12_matrices', name: 'Matrices', subject: 'maths', level: '12', prereqs: [], threshold: 70, videoUrl: 'https://www.youtube.com/embed/xyAuNHPsq-g', notes: 'Rectangular arrays of numbers used to solve linear systems.' },
+    { id: 'm12_itf', name: 'Inverse Trigonometry', subject: 'maths', level: '12', prereqs: ['m12_rel'], threshold: 75, videoUrl: 'https://www.youtube.com/embed/p_di4Zn4wz4', notes: 'Principal value branches and properties of inverse trig functions.' },
+    { id: 'm12_matrices', name: 'Matrices', subject: 'maths', level: '12', prereqs: [], threshold: 70, videoUrl: 'https://www.youtube.com/embed/fNk_zzaMoSs', notes: 'Rectangular arrays of numbers used to solve linear systems.' },
     { id: 'm12_det', name: 'Determinants', subject: 'maths', level: '12', prereqs: ['m12_matrices'], threshold: 70, videoUrl: 'https://www.youtube.com/embed/Ip3X9LOh2dk', notes: 'Scalar value computed from a square matrix.' },
     { id: 'm12_cont', name: 'Continuity & Differentiability', subject: 'maths', level: '12', prereqs: ['m12_itf'], threshold: 80, videoUrl: 'https://www.youtube.com/embed/6kYyusBkb2o', notes: 'Advanced derivations using chain rule, implicit functions, etc.' },
     { id: 'm12_aod', name: 'Applications of Derivatives', subject: 'maths', level: '12', prereqs: ['m12_cont'], threshold: 75, videoUrl: 'https://www.youtube.com/embed/L1Z0M62z3Sg', notes: 'Maxima, minima, tangents, normals, and increasing/decreasing functions.' },

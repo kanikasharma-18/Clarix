@@ -242,7 +242,22 @@ function startTimer() { if (S.quiz.interval) clearInterval(S.quiz.interval); S.q
 function exitQuiz() { clearInterval(S.quiz.interval); showPage('p-home'); }
 
 /* MASTERY ENGINE */
-function computeMastery(ans, cid) { const ca = ans.filter(a => a.concept === cid); if (!ca.length) return null; let tot = 0; ca.forEach(a => { let p = 0; if (a.correct) p += 50; const s = a.ms / 1000; p += s < 10 ? 20 : s < 20 ? 14 : s < 35 ? 8 : 4; p += a.hints === 0 ? 15 : a.hints === 1 ? 8 : 2; if (a.correct) p += a.conf === 'high' ? 15 : a.conf === 'medium' ? 10 : 5; tot += p; }); return Math.min(100, Math.round(tot / ca.length)); }
+function computeMastery(ans, cid) {
+  const ca = ans.filter(a => a.concept === cid);
+  if (!ca.length) return null;
+  if (ca.some(a => !a.correct)) return 0;
+
+  let tot = 0;
+  ca.forEach(a => {
+    let p = 50;
+    const s = a.ms / 1000;
+    p += s < 10 ? 20 : s < 20 ? 14 : s < 35 ? 8 : 4;
+    p += a.hints === 0 ? 15 : a.hints === 1 ? 8 : 2;
+    p += a.conf === 'high' ? 15 : a.conf === 'medium' ? 10 : 5;
+    tot += p;
+  });
+  return Math.min(100, Math.round(tot / ca.length));
+}
 async function finishQuiz() {
   clearInterval(S.quiz.interval);
   showLoad('COMPUTING & SAVING MASTERY…');
