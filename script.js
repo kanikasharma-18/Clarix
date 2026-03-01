@@ -24,7 +24,7 @@ async function handleLogin() {
 
   showLoad('AUTHENTICATING…');
   try {
-    const res = await fetch('http://localhost:3000/api/auth/login', {
+    const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: em, password: pw })
@@ -60,7 +60,7 @@ async function handleSignup() {
 
   showLoad('CREATING PROFILE…');
   try {
-    const res = await fetch('http://localhost:3000/api/auth/register', {
+    const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -201,7 +201,7 @@ async function goQuiz() {
     const topics = aKg.slice(0, 10).map(c => ({ id: c.id, name: c.name }));
 
     // Call our new backend
-    const res = await fetch('http://localhost:3000/api/generate-questions', {
+    const res = await fetch('/api/generate-questions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -272,7 +272,7 @@ async function finishQuiz() {
   S.streak = Math.min(S.streak + 1, 30);
 
   try {
-    await fetch('http://localhost:3000/api/users/sync', {
+    await fetch('/api/users/sync', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
